@@ -1,0 +1,49 @@
+Create Schemas
+
+CREATE DATABASE IF NOT EXISTS tweets;
+
+SHOW DATABASES;
+
+USE tweets;
+
+CREATE TABLE IF NOT EXISTS user_hate (hate STRING, total INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
+CREATE TABLE  IF NOT EXISTS keyword_ct (word STRING, count INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
+CREATE TABLE IF NOT EXISTS user_tweet (username STRING, label INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
+CREATE TABLE IF NOT EXISTS user_follower (username STRING, follower INT) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
+
+SHOW TABLES;
+
+Load Data
+
+LOAD DATA INPATH '/user/cloudera/project/o1/part-00000' OVERWRITE INTO TABLE tweets.user_hate
+
+LOAD DATA INPATH '/user/cloudera/project/o2/part-00000' OVERWRITE INTO TABLE tweets.keyword_ct
+
+LOAD DATA INPATH '/user/cloudera/project/o3/part-00000' OVERWRITE INTO TABLE tweets.user_tweet
+
+LOAD DATA INPATH '/user/cloudera/project/o4/part-00000' OVERWRITE INTO TABLE tweets.user_follower
+
+Queries
+
+Table 1
+
+select * from tweets.user_hate;
+
+Table 2
+
+select word, sum(count) 
+from tweets.keyword_ct 
+group by word;
+
+Table 3
+
+select username, sum(label)/count(label) 
+from tweets.user_tweet 
+group by username;
+
+Table 4
+
+select username,
+sum(follower)/count(username)
+from tweets.user_follower
+group by username;

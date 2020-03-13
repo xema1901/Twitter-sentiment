@@ -1,0 +1,112 @@
+Mapper 1
+
+#!/usr/bin/python
+
+
+# Format of each line is:
+# tweet\username\followers\following\label
+
+import sys
+
+
+for line in sys.stdin:
+    data = line.strip().split("\t")
+    if len(data) == 5:
+
+        tweet, username, followers,following,label =data
+        
+        print "{0}\t{1}".format(tweet, label)
+
+Reducer 1
+
+#!/usr/bin/python
+
+import sys
+c=0
+t=0
+for line in sys.stdin:
+    data_mapped = line.strip().split("\t")
+    if len(data_mapped) != 2:
+        # Something has gone wrong. Skip this line.
+        continue
+
+    tweet, label= data_mapped
+    t=t+1
+    if label=='1':
+        c=c+1
+print c, "\t", t
+
+Mapper 2
+
+#!/usr/bin/python
+import sys
+for line in sys.stdin:
+    data = line.strip().split("\t")
+    if(len(data) > 1):
+        docname = data[0].split(" ")
+        for i in range(len(docname)):
+            print "{0}\t{1}".format(docname[i], 1)
+
+Reducer 2
+
+#!/usr/bin/python
+import sys
+c = 0
+for line in sys.stdin:
+    c=c+1 
+    data_mapped = line.strip().split("\t")
+    if len(data_mapped) != 2:
+        # Something has gone wrong. Skip this line.
+        continue
+
+    thisKey, thisCount = data_mapped
+    print thisKey, "\t", thisCount
+
+Mapper 3
+
+#!/usr/bin/python
+import sys
+for line in sys.stdin:
+    data = line.strip().split("\t")
+    if len(data) == 5:
+        tweet, username, followers, following, label= data
+        print "{0}\t{1}".format(username, label)
+
+Reducer 3
+
+#!/usr/bin/python
+import sys
+c = 0
+for line in sys.stdin:
+    data_mapped = line.strip().split("\t")
+    if len(data_mapped) != 2:
+        # Something has gone wrong. Skip this line.
+        continue
+
+    thisKey, thisCount = data_mapped
+    print thisKey , "\t", thisCount
+
+Mapper 4
+
+#!/usr/bin/python
+import sys
+for line in sys.stdin:
+    data = line.strip().split("\t")
+    if len(data) == 5:
+        tweet, username, followers, following, label= data
+        if label=='1':
+            print "{0}\t{1}".format(username, followers)
+
+Reducer 4
+
+#!/usr/bin/python
+import sys
+c = 0
+for line in sys.stdin:
+    data_mapped = line.strip().split("\t")
+    if len(data_mapped) != 2:
+        # Something has gone wrong. Skip this line.
+        continue
+
+    thisKey, thisCount = data_mapped
+    print thisKey , "\t", thisCount
